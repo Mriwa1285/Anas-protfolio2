@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANAS – Graphic Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg: #0f0f1a; --bg2: #12121f; --bg3: #1a1a2e;
+      --blue: #00c3ff; --purple: #8b5cf6; --pink: #d946ef;
+      --glow-blue: 0 0 20px #00c3ff88, 0 0 40px #00c3ff44;
+      --glow-pur: 0 0 20px #8b5cf688, 0 0 40px #8b5cf644;
+      --glow-mix: 0 0 30px #00c3ff55, 0 0 60px #8b5cf633;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --font-head: 'Orbitron', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:#e0e0f0;font-family:var(--font-body);overflow-x:hidden}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--blue),var(--purple));border-radius:10px}
+
+    #particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.6}
+    .page{position:relative;z-index:1}
+    .portfolio-page{display:none}
+    .portfolio-page.active{display:block}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(15,15,26,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);transition:background 0.3s,box-shadow 0.3s}
+    
+    .nav-logo-container {display:flex;align-items:center;gap:12px;cursor:pointer;}
+    .nav-logo-img {width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--blue);box-shadow:var(--glow-blue);transition:var(--transition); background: #fff;}
+    .nav-logo-container:hover .nav-logo-img {transform:rotate(10deg) scale(1.1);}
+    .nav-logo{font-family:var(--font-head);font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,var(--blue),var(--purple),var(--blue));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;animation:bgPan 4s linear infinite;text-shadow:0 0 20px rgba(0,195,255,0.3)}
+    
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;font-weight:500;transition:var(--transition);position:relative}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width 0.3s ease}
+    .nav-links a:hover{color:#fff;text-shadow:0 0 10px rgba(255,255,255,0.5)}
+    .nav-links a:hover::after{width:100%}
+    .nav-cta{padding:0.5rem 1.5rem;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:50px;color:#fff!important;font-weight:600!important;box-shadow:var(--glow-blue);transition:var(--transition)!important}
+    .nav-cta:hover{transform:scale(1.05);box-shadow:0 0 30px #00c3ffaa!important}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px}
+    .hamburger span{display:block;width:25px;height:2px;background:var(--blue);border-radius:2px;transition:var(--transition)}
+
+    #hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 4rem 4rem;position:relative;overflow:hidden}
+    #hero::before,#hero::after{content:'';position:absolute;border-radius:50%;filter:blur(100px);z-index:0}
+    #hero::before{width:600px;height:600px;background:radial-gradient(circle,#8b5cf622,transparent 70%);top:-100px;left:-100px;animation:blobPulse 8s ease-in-out infinite}
+    #hero::after{width:500px;height:500px;background:radial-gradient(circle,#00c3ff22,transparent 70%);bottom:-100px;right:300px;animation:blobPulse 10s ease-in-out infinite reverse}
+    @keyframes blobPulse{0%,100%{transform:scale(1) translate(0,0)}50%{transform:scale(1.2) translate(30px,-30px)}}
+
+    .hero-left{position:relative;z-index:2;animation:slideInLeft 1s cubic-bezier(0.4,0,0.2,1) forwards;opacity:0}
+    @keyframes slideInLeft{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+    
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:0.4rem 1rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:50px;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:1.5rem;backdrop-filter:blur(10px);box-shadow:inset 0 0 10px rgba(0,195,255,0.1);animation:floatSlow 4s ease-in-out infinite}
+    .hero-badge .dot{width:8px;height:8px;background:var(--blue);border-radius:50%;animation:pulseDot 2s infinite}
+    @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 #00c3ff66}50%{box-shadow:0 0 0 8px #00c3ff00}}
+    @keyframes floatSlow{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+    .hero-name-container {display:flex;align-items:center;gap:clamp(15px, 3vw, 25px);margin-bottom:0.5rem; flex-wrap:wrap;}
+    .hero-main-logo {width:clamp(70px, 9vw, 120px);height:clamp(70px, 9vw, 120px);border-radius:50%;object-fit:cover;border:3px solid rgba(0,195,255,0.3);animation:glowPulseLogo 4s infinite alternate, floatSlow 4s ease-in-out infinite; background: #fff;}
+    @keyframes glowPulseLogo {
+      0% { box-shadow: 0 0 20px rgba(0,195,255,0.4), inset 0 0 10px rgba(0,195,255,0.2); }
+      100% { box-shadow: 0 0 40px rgba(139,92,246,0.6), inset 0 0 20px rgba(139,92,246,0.3); border-color:rgba(139,92,246,0.5); }
+    }
+
+    @keyframes bgPan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .hero-name{font-family:var(--font-head);font-size:clamp(3.5rem,7vw,7rem);font-weight:900;line-height:1;letter-spacing:6px;background:linear-gradient(135deg,#fff 0%,var(--blue) 30%,var(--purple) 70%,#fff 100%);background-size:200% auto;animation:bgPan 5s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(0,195,255,0.3))}
+    .hero-title{font-size:clamp(1rem,2vw,1.4rem);font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;min-height:2.5em;margin-top:0.5rem;}
+    .hero-title span{color:var(--purple);font-weight:600;text-shadow:0 0 10px rgba(139,92,246,0.5)}
+    .hero-tagline{font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.7;color:rgba(255,255,255,0.75);margin-bottom:2.5rem;max-width:480px;font-weight:400}
+    .hero-tagline strong{color:var(--blue);font-weight:600}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+
+    .btn-primary{padding:0.9rem 2rem;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:50px;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:600;letter-spacing:1px;cursor:pointer;position:relative;overflow:hidden;transition:var(--transition);box-shadow:0 0 20px #00c3ff55,0 0 40px #8b5cf622;text-decoration:none;display:inline-flex;align-items:center;gap:8px;z-index:1; white-space:nowrap;}
+    .btn-primary::before{content:'absolute';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(transparent,rgba(255,255,255,0.3),transparent);transform:rotate(45deg) translateX(-100%);transition:0.6s;z-index:-1}
+    .btn-primary:hover::before{transform:rotate(45deg) translateX(100%)}
+    .btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 35px #00c3ffaa,0 0 70px #8b5cf655}
+
+    .btn-secondary{padding:0.9rem 2rem;background:transparent;border:1px solid rgba(0,195,255,0.4);border-radius:50px;color:var(--blue);font-family:var(--font-body);font-size:0.9rem;font-weight:600;letter-spacing:1px;cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(10px); white-space:nowrap;}
+    .btn-secondary:hover{background:rgba(0,195,255,0.1);border-color:var(--blue);box-shadow:var(--glow-blue);transform:translateY(-3px);color:#fff}
+
+    .hero-right{display:flex;justify-content:center;align-items:center;position:relative;z-index:2;animation:slideInRight 1s cubic-bezier(0.4,0,0.2,1) 0.3s forwards;opacity:0}
+    @keyframes slideInRight{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+    
+    .parallax-wrapper{transition:transform 0.1s linear;}
+    
+    .design-showcase {
+      position: relative;
+      width: 360px;
+      height: 420px;
+      animation: floatY 6s ease-in-out infinite;
+    }
+    @keyframes floatY{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-15px) scale(1.02)}}
+    
+    .ds-card {
+      position: absolute;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .ds-card i {
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.8rem;
+    }
+    .ds-card span {
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+    }
+    
+    .ds-main {
+      width: 240px; height: 300px;
+      top: 60px; left: 60px; z-index: 2;
+      border: 2px solid rgba(0,195,255,0.3);
+      box-shadow: 0 0 40px rgba(0,195,255,0.2), inset 0 0 30px rgba(0,195,255,0.05);
+      background: linear-gradient(135deg, rgba(0,195,255,0.08) 0%, rgba(139,92,246,0.08) 100%);
+    }
+    .ds-main i { font-size: 5rem; animation: pulseIcon 4s ease-in-out infinite; }
+    
+    .ds-top {
+      width: 150px; height: 160px;
+      top: 0; left: 220px; z-index: 1;
+      border-color: rgba(139,92,246,0.3);
+      box-shadow: 0 0 30px rgba(139,92,246,0.15);
+      animation: floatSlowAlt 5s ease-in-out infinite alternate;
+    }
+    .ds-top i { font-size: 3rem; }
+    
+    .ds-bottom {
+      width: 170px; height: 140px;
+      top: 260px; left: 0; z-index: 3;
+      border-color: rgba(217,70,239,0.3);
+      box-shadow: 0 0 30px rgba(217,70,239,0.15);
+      animation: floatSlowAlt 4s ease-in-out infinite alternate-reverse;
+    }
+    .ds-bottom i { font-size: 3rem; }
+
+    @keyframes pulseIcon {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(0,195,255,0.4)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 25px rgba(139,92,246,0.6)); transform: scale(1.08); }
+    }
+    @keyframes floatSlowAlt {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-15px) rotate(2deg); }
+    }
+
+    .hero-stats{display:flex;gap:2rem;margin-top:2.5rem}
+    .stat-item{display:flex;flex-direction:column;gap:4px}
+    .stat-num{font-family:var(--font-head);font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-label{font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:1px}
+
+    section{padding:6rem 4rem;position:relative;z-index:1}
+    
+    .section-header{text-align:center;margin-bottom:4rem;opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+    .section-header.revealed{opacity:1;transform:translateY(0);}
+    .section-label{display:inline-block;font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--blue);margin-bottom:1rem;font-weight:600}
+    .section-title{font-family:var(--font-head);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;background:linear-gradient(135deg,#fff,rgba(255,255,255,0.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+    .section-desc{font-size:1rem;color:rgba(255,255,255,0.4);max-width:500px;margin:0 auto;line-height:1.7}
+    .divider{width:60px;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple));margin:1rem auto 0;border-radius:2px}
+
+    #value{background:linear-gradient(180deg,transparent,rgba(139,92,246,0.03),transparent)}
+    .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1100px;margin:0 auto}
+    .value-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2.5rem 2rem;text-align:center;backdrop-filter:blur(20px);transition:var(--transition);position:relative;overflow:hidden;cursor:default;opacity:0;transform:translateY(40px)}
+    .value-card.revealed{opacity:1;transform:translateY(0);transition:opacity 0.6s ease,transform 0.6s ease,box-shadow 0.4s,border-color 0.4s}
+    .value-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));transform:scaleX(0);transition:transform 0.4s ease}
+    .value-card:hover::before{transform:scaleX(1)}
+    .value-card:hover{border-color:rgba(0,195,255,0.3);box-shadow:0 0 40px rgba(0,195,255,0.15),0 20px 40px rgba(0,0,0,0.3);transform:translateY(-8px) scale(1.02)!important; z-index:2;}
+    .value-icon{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,rgba(0,195,255,0.15),rgba(139,92,246,0.15));border:1px solid rgba(0,195,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem;transition:var(--transition);animation:floatIcon 3s ease-in-out infinite; color:var(--blue);}
+    @keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .value-card:hover .value-icon{box-shadow:var(--glow-blue);background:linear-gradient(135deg,rgba(0,195,255,0.25),rgba(139,92,246,0.25));transform:translateY(-10px) rotate(5deg) scale(1.1);}
+    .value-card h3{font-family:var(--font-head);font-size:1rem;font-weight:700;color:#fff;margin-bottom:1rem;letter-spacing:1px}
+    .value-card p{font-size:0.9rem;color:rgba(255,255,255,0.5);line-height:1.7}
+
+    #skills{background:linear-gradient(180deg,transparent,rgba(0,195,255,0.02),transparent)}
+    .skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:1100px;margin:0 auto;align-items:start}
+    .circular-skills{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+    .circ-skill{display:flex;flex-direction:column;align-items:center;gap:0.75rem;opacity:0;transform:scale(0.8);transition:opacity 0.6s ease,transform 0.6s ease}
+    .circ-skill.revealed{opacity:1;transform:scale(1)}
+    .circ-skill svg{width:100px;height:100px;transform:rotate(-90deg);filter:drop-shadow(0 0 8px var(--blue))}
+    .circ-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:6}
+    .circ-fill{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:251.2;stroke-dashoffset:251.2;transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)}
+    .circ-fill.blue{stroke:url(#grad-blue)}.circ-fill.purple{stroke:url(#grad-purple)}
+    .circ-label{text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.6);letter-spacing:1px;font-weight:500}
+    .circ-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+    .circ-wrap span{position:absolute;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#fff}
+    .slider-skills{display:flex;flex-direction:column;gap:1.5rem}
+    .skill-item{opacity:0;transform:translateX(-30px);transition:opacity 0.5s ease,transform 0.5s ease}
+    .skill-item.revealed{opacity:1;transform:translateX(0)}
+    .skill-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+    .skill-name{font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:8px}
+    .skill-name i{color:var(--blue);font-size:0.9rem}
+    .skill-pct{font-family:var(--font-head);font-size:0.8rem;color:var(--blue)}
+    .skill-track{height:6px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
+    .skill-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blue),var(--purple));width:0;transition:width 1.5s cubic-bezier(0.4,0,0.2,1);position:relative}
+    .skill-bar::after{content:'absolute';position:absolute;right:0;top:-3px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 10px var(--blue)}
+
+    #projects{background:linear-gradient(180deg,transparent,rgba(139,92,246,0.03),transparent)}
+    .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1100px;margin:0 auto}
+    .project-card{border-radius:20px;overflow:hidden;position:relative;background:var(--glass);border:1px solid var(--glass-border);cursor:pointer;opacity:0;transform:translateY(30px);transition:opacity 0.6s,transform 0.6s,box-shadow 0.4s}
+    .project-card.revealed{opacity:1;transform:translateY(0)}
+    .project-card:hover{box-shadow:0 0 50px rgba(0,195,255,0.2),0 20px 40px rgba(0,0,0,0.4);border-color:rgba(0,195,255,0.3);transform:translateY(-8px)}
+    .project-thumb{width:100%;aspect-ratio:4/5;background:linear-gradient(180deg,var(--bg3),#0a0a18);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .project-thumb img{width:100%;height:100%;object-fit:cover;opacity:0.85;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1), opacity 0.4s;}
+    .project-card:hover .project-thumb img{opacity:0.4;transform:scale(1.15);}
+    
+    .project-type-badge{padding:0.4rem 0.9rem;border-radius:50px;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;position:absolute;top:15px;left:15px;z-index:2;box-shadow:0 4px 10px rgba(0,0,0,0.3);backdrop-filter:blur(5px);}
+    .badge-logo{background:rgba(0,195,255,0.15);border:1px solid rgba(0,195,255,0.3);color:var(--blue)}
+    .badge-poster{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--purple)}
+    .badge-social{background:rgba(217,70,239,0.15);border:1px solid rgba(217,70,239,0.3);color:var(--pink)}
+    
+    .project-overlay{position:absolute;inset:0;background:rgba(10,10,24,0.85);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;opacity:0;transition:opacity 0.4s ease;z-index:3}
+    .project-card:hover .project-overlay{opacity:1}
+    
+    .view-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;box-shadow:var(--glow-blue);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);animation:viewPulse 2s infinite}
+    @keyframes viewPulse{0%,100%{box-shadow:0 0 20px #00c3ff55;transform:scale(1)}50%{box-shadow:0 0 40px #00c3ffaa;transform:scale(1.05)}}
+    .project-card:hover .view-circle{transform:scale(1.1)}
+    
+    .overlay-btn{padding:0.6rem 1.5rem;background:transparent;border:1px solid rgba(255,255,255,0.3);border-radius:50px;color:#fff;font-size:0.8rem;cursor:pointer;transition:var(--transition);font-family:var(--font-body);font-weight:500; white-space:nowrap;}
+    .overlay-btn:hover{background:rgba(0,195,255,0.2);border-color:var(--blue);box-shadow:var(--glow-blue);transform:translateY(-2px)}
+    .view-all-wrap{text-align:center;margin-top:3rem}
+
+    #connect{text-align:center;background:linear-gradient(180deg,transparent,rgba(0,195,255,0.03))}
+    .social-grid{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;margin-top:3rem}
+    .social-card{display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:2rem 3rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;backdrop-filter:blur(20px);text-decoration:none;color:#fff;transition:var(--transition);min-width:150px;cursor:pointer;opacity:0;transform:translateY(20px)}
+    .social-card.revealed{opacity:1;transform:translateY(0)}
+    .social-card:hover{transform:translateY(-8px) scale(1.05)!important;border-color:rgba(0,195,255,0.4);box-shadow:var(--glow-blue)}
+    .social-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:var(--transition)}
+    .social-card:hover .social-icon{box-shadow:var(--glow-blue);transform:scale(1.1) rotate(-5deg)}
+    .si-insta{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+    .si-kwork{background:linear-gradient(135deg,#00c9a7,#00a085)}
+    .social-name{font-size:0.8rem;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.7)}
+
+    .connect-cta-wrap{margin-top:4rem;padding:3rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:24px;backdrop-filter:blur(20px);max-width:700px;margin:4rem auto 0;transition:var(--transition)}
+    .connect-cta-wrap:hover{border-color:rgba(139,92,246,0.3);box-shadow:var(--glow-pur)}
+    .connect-cta-wrap h3{font-family:var(--font-head);font-size:1.5rem;font-weight:700;margin-bottom:1rem;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .connect-cta-wrap p{color:rgba(255,255,255,0.5);margin-bottom:1.5rem;line-height:1.7}
+
+    footer{padding:2rem 4rem;border-top:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    .footer-logo{font-family:var(--font-head);font-size:1.2rem;font-weight:900;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .footer-text{font-size:0.8rem;color:rgba(255,255,255,0.3)}
+    .back-to-top{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:var(--transition);box-shadow:var(--glow-blue)}
+    .back-to-top:hover{transform:translateY(-3px) scale(1.1)}
+
+    /* PORTFOLIO NAV */
+    .portfolio-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 4rem;
+      background: rgba(15,15,26,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    #portfolio-page{min-height:100vh;padding-top:6rem}
+    .portfolio-header{text-align:center;padding:3rem 4rem 1rem}
+    
+    .back-btn{display:inline-flex;align-items:center;gap:8px;padding:0.6rem 1.5rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:50px;color:rgba(255,255,255,0.8);cursor:pointer;font-family:var(--font-body);font-size:0.85rem;transition:var(--transition);white-space:nowrap;}
+    .back-btn:hover{color:var(--blue);border-color:rgba(0,195,255,0.3);box-shadow:var(--glow-blue);transform:translateX(-5px)}
+    
+    .toggle-btns{display:flex;justify-content:center;gap:1rem;margin:2rem 0;flex-wrap:wrap}
+    .toggle-btn{padding:0.8rem 2rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:50px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--font-body);font-size:0.85rem;font-weight:600;letter-spacing:1px;transition:var(--transition);backdrop-filter:blur(10px); white-space:nowrap;}
+    .toggle-btn.active{background:linear-gradient(135deg,var(--blue),var(--purple));border-color:transparent;color:#fff;box-shadow:var(--glow-mix);transform:scale(1.05)}
+
+    /* Updated Grid to Prevent Stretching (Allows variable heights for full images) */
+    .portfolio-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:2rem;
+      padding:2rem 4rem 4rem;
+      max-width:1200px;
+      margin:0 auto;
+      align-items: start;
+    }
+    
+    .portfolio-card{
+      background:var(--glass);
+      border:1px solid var(--glass-border);
+      border-radius:20px;
+      overflow:hidden;
+      backdrop-filter:blur(10px);
+      transition:transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+    }
+    
+    .portfolio-card.animate-in{
+      animation:fadeInUp 0.6s ease both;
+    }
+    
+    @keyframes fadeInUp{
+      from{opacity:0;transform:translateY(40px) scale(0.95)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    .portfolio-card:hover{box-shadow:0 0 50px rgba(0,195,255,0.2),0 20px 40px rgba(0,0,0,0.4);border-color:rgba(0,195,255,0.3);transform:translateY(-8px)}
+
+    /* IMAGE CONTAINER STYLES */
+    .portfolio-image{width:100%;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .portfolio-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;}
+    
+    /* CLASS FOR FULL IMAGE (NO CROPPING) */
+    .portfolio-image.full-auto { aspect-ratio: auto; background: transparent; }
+    .portfolio-image.full-auto img { height: auto; object-fit: contain; }
+    
+    .portfolio-card:hover .portfolio-image img{transform:scale(1.08);}
+
+    .portfolio-info{padding:1.5rem}
+    .portfolio-title{font-family:var(--font-head); font-size: 1.1rem; color: #fff; margin-bottom: 0.5rem;}
+    .portfolio-desc{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:1rem}
+    .tools-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:0.4rem;font-weight:600}
+    .tools-list{display:flex;flex-wrap:wrap;gap:4px;}
+    .tool-tag{padding:4px 12px;background:rgba(0,195,255,0.08);border:1px solid rgba(0,195,255,0.2);border-radius:50px;font-size:0.7rem;color:var(--blue);letter-spacing:1px;transition:var(--transition)}
+    .tool-tag:hover{background:rgba(0,195,255,0.2);transform:scale(1.05)}
+
+    .page-transition{position:fixed;inset:0;background:linear-gradient(135deg,#0f0f1a,#1a0a2e);z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.4s ease}
+    .page-transition.active{opacity:1;pointer-events:all}
+    .transition-logo{font-family:var(--font-head);font-size:3rem;font-weight:900;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:pulseLogo 1s ease-in-out infinite}
+    @keyframes pulseLogo{0%,100%{opacity:0.5;transform:scale(0.95)}50%{opacity:1;transform:scale(1.05)}}
+
+    .scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));z-index:2000;width:0%;transition:width 0.1s;box-shadow:var(--glow-blue)}
+    .glow-line{height:1px;background:linear-gradient(90deg,transparent,var(--blue),var(--purple),transparent);margin:0;opacity:0.3}
+
+    @media(max-width:1024px){
+      #hero{padding:7rem 2rem 4rem}
+      .value-grid{grid-template-columns:1fr 1fr}
+      .projects-grid{grid-template-columns:1fr 1fr}
+      .skills-layout{grid-template-columns:1fr;gap:2rem}
+      .circular-skills{grid-template-columns:repeat(4,1fr)}
+      nav{padding:1rem 2rem}
+      .portfolio-nav { padding: 1rem 2rem; }
+      section{padding:5rem 2rem}
+    }
+    @media(max-width:768px){
+      #hero{grid-template-columns:1fr;text-align:center;padding:6rem 1.5rem 4rem;gap:3rem}
+      .hero-name-container {justify-content:center; gap:15px;}
+      .hero-tagline{margin:0 auto 2.5rem}
+      .hero-btns{justify-content:center}
+      .hero-stats{justify-content:center}
+      
+      .design-showcase { width: 260px; height: 320px; margin: 0 auto; }
+      .ds-main { width: 180px; height: 220px; top: 50px; left: 40px; }
+      .ds-top { width: 110px; height: 130px; top: 0; left: 150px; }
+      .ds-bottom { width: 120px; height: 110px; top: 180px; left: 0; }
+      
+      .value-grid{grid-template-columns:1fr}
+      .projects-grid{grid-template-columns:1fr}
+      .circular-skills{grid-template-columns:repeat(2,1fr)}
+      nav{padding:1rem 1.5rem}
+      .portfolio-nav { padding: 1rem 1.5rem; }
+      .nav-links{display:none}
+      .nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(15,15,26,0.97);backdrop-filter:blur(20px);padding:1.5rem;border-bottom:1px solid var(--glass-border);gap:1rem;align-items:center}
+      .hamburger{display:flex}
+      section{padding:4rem 1.5rem}
+      footer{flex-direction:column;gap:1rem;text-align:center;padding:2rem 1.5rem}
+      .portfolio-grid{grid-template-columns: 1fr; padding:2rem 1.5rem}
+      .portfolio-header{padding:2rem 1.5rem 1rem}
+      .back-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+    }
+    @media(max-width:480px){
+      .hero-name{font-size:3rem}
+      .circular-skills{grid-template-columns:1fr 1fr}
+      .hide-mobile-text { display: none; }
+      .back-btn { padding: 0.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-progress" id="scroll-progress"></div>
+  <div class="page-transition" id="page-transition"><div class="transition-logo">ANAS</div></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ============ MAIN PAGE ============ -->
+  <div id="main-page" class="page">
+    <nav id="navbar">
+      <div class="nav-logo-container" onclick="scrollToTop()">
+        <img src="https://i.ibb.co.com/s90WN6PM/anas-logo.png" alt="ANAS Logo" class="nav-logo-img">
+        <div class="nav-logo">ANAS</div>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#value">Services</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Work</a></li>
+        <li><a href="#connect">Connect</a></li>
+        <li><a href="#connect" class="nav-cta">Hire Me</a></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </nav>
+
+    <section id="hero">
+      <div class="hero-left">
+        <div class="hero-badge"><span class="dot"></span> Available for Projects</div>
+        
+        <div class="hero-name-container">
+          <img src="https://i.ibb.co.com/s90WN6PM/anas-logo.png" alt="ANAS Logo" class="hero-main-logo">
+          <h1 class="hero-name">ANAS</h1>
+        </div>
+        
+        <p class="hero-title"><span>Creative</span> Graphic Designer</p>
+        <p class="hero-tagline">I design <strong>high-quality visuals</strong> that help brands stand out. From stunning logos to engaging social media graphics, I bring your ideas to life.</p>
+        <div class="hero-btns">
+          <a href="javascript:void(0)" class="btn-primary" onclick="openPortfolio('all')"><i class="fas fa-palette"></i> Explore My Work</a>
+          <a href="#connect" class="btn-secondary" onclick="smoothScroll('#connect')"><i class="fas fa-rocket"></i> Start a Design Project</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item"><span class="stat-num">50+</span><span class="stat-label">Designs Created</span></div>
+          <div class="stat-item"><span class="stat-num">20+</span><span class="stat-label">Happy Clients</span></div>
+          <div class="stat-item"><span class="stat-num">3+</span><span class="stat-label">Years Experience</span></div>
+        </div>
+      </div>
+      
+      <div class="hero-right">
+        <div class="parallax-wrapper">
+          <div class="design-showcase">
+            <div class="ds-card ds-main">
+              <i class="fas fa-bezier-curve"></i>
+              <span>Design</span>
+            </div>
+            <div class="ds-card ds-top">
+              <i class="fas fa-swatchbook"></i>
+              <span>Colors</span>
+            </div>
+            <div class="ds-card ds-bottom">
+              <i class="fas fa-object-group"></i>
+              <span>Layout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="glow-line"></div>
+
+    <section id="value">
+      <div class="section-header">
+        <span class="section-label">My Expertise</span>
+        <h2 class="section-title">Graphic Design Services</h2>
+        <div class="divider"></div>
+        <p class="section-desc">Delivering impactful, high-end visuals tailored to elevate your brand identity and audience engagement.</p>
+      </div>
+      <div class="value-grid">
+        <div class="value-card" data-delay="0">
+          <div class="value-icon"><i class="fas fa-pen-nib"></i></div>
+          <h3>Brand Identity &<br>Logo Design</h3>
+          <p>I craft memorable, unique, and timeless logos that communicate your core values and establish a strong brand presence.</p>
+        </div>
+        <div class="value-card" data-delay="150">
+          <div class="value-icon"><i class="fas fa-image"></i></div>
+          <h3>YouTube Thumbnails &<br>Poster Design</h3>
+          <p>Eye-catching YouTube thumbnails that increase click-through rates and bold posters designed to grab immediate attention.</p>
+        </div>
+        <div class="value-card" data-delay="300">
+          <div class="value-icon"><i class="fas fa-share-nodes"></i></div>
+          <h3>Social Media<br>Graphics</h3>
+          <p>Cohesive and scroll-stopping visual content optimized for Instagram, Facebook, LinkedIn, and other major platforms.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="glow-line"></div>
+
+    <section id="skills">
+      <div class="section-header">
+        <span class="section-label">Capabilities</span>
+        <h2 class="section-title">My Skills</h2>
+        <div class="divider"></div>
+        <p class="section-desc">Proficient in industry-standard design software and core creative principles.</p>
+      </div>
+      <div class="skills-layout">
+        <div class="circular-skills" id="circ-skills"></div>
+        <div class="slider-skills" id="slider-skills"></div>
+      </div>
+    </section>
+
+    <div class="glow-line"></div>
+
+    <section id="projects">
+      <div class="section-header">
+        <span class="section-label">Portfolio</span>
+        <h2 class="section-title">Featured Designs</h2>
+        <div class="divider"></div>
+        <p class="section-desc">A curated showcase of my best graphic design projects.</p>
+      </div>
+      <div class="projects-grid" id="projects-grid"></div>
+      <div class="view-all-wrap">
+        <button class="btn-primary" onclick="openPortfolio('all')"><i class="fas fa-th-large"></i> View Full Portfolio</button>
+      </div>
+    </section>
+
+    <div class="glow-line"></div>
+
+    <section id="connect">
+      <div class="section-header">
+        <span class="section-label">Let's Connect</span>
+        <h2 class="section-title">Find Me Online</h2>
+        <div class="divider"></div>
+        <p class="section-desc">Ready to collaborate? Reach out through any of these platforms.</p>
+      </div>
+      <div class="social-grid">
+        <a href="https://www.instagram.com/anas.aicreator?igsh=ZG15cWw3ZGg3dDU1" target="_blank" rel="noopener" class="social-card" data-delay="0">
+          <div class="social-icon si-insta"><i class="fab fa-instagram"></i></div>
+          <span class="social-name">Instagram</span>
+        </a>
+        <a href="https://kwork.com/user/anas1285" target="_blank" rel="noopener" class="social-card" data-delay="100">
+          <div class="social-icon si-kwork">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15H9V9h2v8zm4-8h-2v8h2V9z"/></svg>
+          </div>
+          <span class="social-name">Kwork</span>
+        </a>
+      </div>
+      <div class="connect-cta-wrap">
+        <h3>Ready to Launch Your Next Project?</h3>
+        <p>Let's build something extraordinary together. From concept to final delivery — I'll ensure your brand looks professional and striking.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="mailto:Ibteshamwasifanas@gmail.com" class="btn-primary"><i class="fas fa-envelope"></i> Send a Message</a>
+          <button class="btn-secondary" onclick="openPortfolio('all')"><i class="fas fa-eye"></i> See My Work</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-logo">ANAS</div>
+      <p class="footer-text">© 2026 ANAS · Graphic Designer · All rights reserved</p>
+      <button class="back-to-top" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></button>
+    </footer>
+  </div>
+
+  <!-- ============ PORTFOLIO PAGE ============ -->
+  <div id="portfolio-page" class="page portfolio-page">
+    <nav class="portfolio-nav">
+      <div class="nav-logo-container" onclick="closePortfolio()">
+        <img src="https://i.ibb.co.com/s90WN6PM/anas-logo.png" alt="ANAS Logo" class="nav-logo-img">
+        <div class="nav-logo">ANAS</div>
+      </div>
+      <button class="back-btn" onclick="closePortfolio()"><i class="fas fa-arrow-left"></i> <span class="hide-mobile-text">Back to Main</span></button>
+    </nav>
+    <div class="portfolio-header">
+      <span class="section-label">Design Portfolio</span>
+      <h2 class="section-title">My Work</h2>
+      <div class="divider" style="margin-bottom:0;"></div>
+      <div class="toggle-btns">
+        <button class="toggle-btn active" id="all-btn" onclick="switchCategory('all')"><i class="fas fa-th-large"></i> All Works</button>
+        <button class="toggle-btn" id="logo-btn" onclick="switchCategory('logo')"><i class="fas fa-pen-nib"></i> Logo Designs</button>
+        <button class="toggle-btn" id="thumb-btn" onclick="switchCategory('thumb')"><i class="fas fa-image"></i> Thumbnails</button>
+        <button class="toggle-btn" id="poster-btn" onclick="switchCategory('poster')"><i class="fas fa-scroll"></i> Posters</button>
+        <button class="toggle-btn" id="social-btn" onclick="switchCategory('social')"><i class="fas fa-share-nodes"></i> Social Media</button>
+      </div>
+    </div>
+    <div class="portfolio-grid" id="portfolio-grid"></div>
+  </div>
+
+  <!-- ============ JAVASCRIPT ============ -->
+  <script>
+    const canvas=document.getElementById('particles-canvas'),ctx=canvas.getContext('2d');
+    let particles=[],W,H;const isMobile=window.innerWidth<768;
+    let mouse = { x: null, y: null, radius: 120 };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    function resizeCanvas(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+    resizeCanvas();let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(()=>{resizeCanvas();initP()},200)});
+    
+    function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.s=Math.random()*1.2+0.3;this.sx=(Math.random()-0.5)*0.3;this.sy=(Math.random()-0.5)*0.3;this.o=Math.random()*0.4+0.1;this.c=Math.random()>0.5?`rgba(0,195,255,${this.o})`:`rgba(139,92,246,${this.o})`}
+    P.prototype.update=function(){
+      if (mouse.x && mouse.y && !isMobile) {
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < mouse.radius) {
+          const forceX = dx / dist;
+          const forceY = dy / dist;
+          const pushForce = (mouse.radius - dist) / mouse.radius;
+          this.x -= forceX * pushForce * 3;
+          this.y -= forceY * pushForce * 3;
+        }
+      }
+      this.x+=this.sx;this.y+=this.sy;
+      if(this.x<0||this.x>W)this.sx*=-1;
+      if(this.y<0||this.y>H)this.sy*=-1;
+    };
+    P.prototype.draw=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle=this.c;ctx.fill()};
+    
+    function initP(){particles=[];const c=isMobile?25:Math.min(60,Math.floor(W*H/22000));for(let i=0;i<c;i++)particles.push(new P())}
+    function drawC(){if(isMobile)return;for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=dx*dx+dy*dy;if(d<14400){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,195,255,${(1-Math.sqrt(d)/120)*0.08})`;ctx.lineWidth=0.5;ctx.stroke()}}}
+    function animP(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw()});drawC();requestAnimationFrame(animP)}
+    initP();animP();
+
+    document.addEventListener('mousemove', e => {
+      if(isMobile) return;
+      const x = (window.innerWidth / 2 - e.pageX) / 40;
+      const y = (window.innerHeight / 2 - e.pageY) / 40;
+      const parallaxWrapper = document.querySelector('.parallax-wrapper');
+      if(parallaxWrapper) {
+        parallaxWrapper.style.transform = `perspective(1000px) rotateX(${y}deg) rotateY(${-x}deg) translate(${x}px, ${y}px)`;
+      }
+    });
+
+    const scrollBar=document.getElementById('scroll-progress');let ticking=false;
+    window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(()=>{const s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;if(d>0)scrollBar.style.width=((s/d)*100)+'%';const nav=document.getElementById('navbar');if(nav){nav.style.background=s>50?'rgba(15,15,26,0.95)':'rgba(15,15,26,0.7)';nav.style.boxShadow=s>50?'0 4px 30px rgba(0,195,255,0.08)':'none'}ticking=false});ticking=true}});
+
+    function toggleMenu(){document.getElementById('nav-links').classList.toggle('open')}
+    function smoothScroll(t){const e=document.querySelector(t);if(e)e.scrollIntoView({behavior:'smooth'})}
+    function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+
+    const circularSkills=[
+      {label:'Logo & Brand<br>Identity',pct:95,color:'blue'},
+      {label:'Typography &<br>Layout',pct:90,color:'purple'},
+      {label:'Social Media<br>Design',pct:92,color:'blue'},
+      {label:'Print & Poster<br>Design',pct:88,color:'purple'},
+    ];
+    const sliderSkills=[
+      {name:'Adobe Photoshop',pct:95,icon:'fas fa-image'},
+      {name:'Adobe Illustrator',pct:92,icon:'fas fa-pen-nib'},
+      {name:'Figma',pct:85,icon:'fas fa-vector-square'},
+      {name:'Color Theory',pct:90,icon:'fas fa-palette'},
+      {name:'Visual Composition',pct:88,icon:'fas fa-layer-group'},
+    ];
+
+    const circContainer=document.getElementById('circ-skills');
+    const R=40,CIRC=2*Math.PI*R;
+    circularSkills.forEach((s,i)=>{
+      const w=document.createElement('div');w.className='circ-skill';w.style.transitionDelay=(i*0.15)+'s';
+      w.innerHTML=`<div class="circ-wrap"><svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="${R}"/><circle class="circ-fill ${s.color}" cx="50" cy="50" r="${R}" stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC}"/></svg><span>${s.pct}%</span></div><div class="circ-label">${s.label}</div>`;
+      circContainer.appendChild(w);
+    });
+
+    const sliderContainer=document.getElementById('slider-skills');
+    sliderSkills.forEach((s,i)=>{
+      const item=document.createElement('div');item.className='skill-item';item.style.transitionDelay=(i*0.1)+'s';
+      item.innerHTML=`<div class="skill-header"><span class="skill-name"><i class="${s.icon}"></i>${s.name}</span><span class="skill-pct">${s.pct}%</span></div><div class="skill-track"><div class="skill-bar" data-pct="${s.pct}"></div></div>`;
+      sliderContainer.appendChild(item);
+    });
+
+    // UPDATED PORTFOLIO DATA
+    const portfolioData = {
+      logo:[
+        { img: 'https://i.ibb.co.com/gbQZ5FLC/1772960430221.png', title: 'Brand Identity Logo', desc: 'Modern and sleek logo design tailored for brand recognition.', tools:['Illustrator', 'Figma'] },
+        { img: 'https://i.ibb.co.com/hnvMcwq/0001-1-a-professional-logo-design-showcasing-mr-j-Kcl-p-S-G-WWSS2t-K-BQ-l-Af5o-Kop-R-Wv-Fcj-KNNWGCw.jpg', title: 'Professional Brand Mark', desc: 'Clean, professional logo showcasing core brand values.', tools:['Illustrator', 'Photoshop'] },
+        { img: 'https://i.ibb.co.com/gZ12zkb7/file-00000000687c71fab2451a4a21181b40.png', title: 'Creative Concept Logo', desc: 'Unique and eye-catching logo concept.', tools: ['Illustrator'] },
+        { img: 'https://i.ibb.co.com/6c6JBRhS/1772797600511.png', title: 'Minimalist Identity', desc: 'Minimalist and highly scalable logo design.', tools: ['Illustrator'] },
+        { img: 'https://i.ibb.co.com/MkrL79H6/1772797526544.png', title: 'Corporate Logo', desc: 'Strong visual identity designed for corporate branding.', tools:['Illustrator', 'Photoshop'] },
+        { img: 'https://i.ibb.co.com/Fqyx0b86/1772785801339.png', title: 'Modern Emblem', desc: 'Versatile emblem design suitable for various mediums.', tools:['Figma', 'Illustrator'] }
+      ],
+      thumb:[
+        { img: 'https://i.ibb.co.com/5gz0zWXT/1772926960874.png', title: 'Engaging YouTube Thumbnail', desc: 'High-quality, click-optimized thumbnail design.', tools: ['Photoshop'] },
+        { img: 'https://i.ibb.co.com/VYKjxv7K/1772842937943.png', title: 'Viral Video Thumbnail', desc: 'Custom thumbnail designed to maximize viewers.', tools:['Photoshop', 'Illustrator'] },
+        { img: 'https://i.ibb.co.com/k29cKKkq/1772842384872.png', title: 'Creative Content Thumbnail', desc: 'Eye-catching design tailored for target audiences.', tools: ['Photoshop'] },
+        { img: 'https://i.ibb.co.com/1YYqNg03/1772779549029.png', title: 'High-CTR Thumbnail', desc: 'Dynamic colors and typography to stand out.', tools:['Photoshop', 'Lightroom'] },
+        { img: 'https://i.ibb.co.com/MysZ8gTn/1772785035871.png', title: 'Custom Channel Thumbnail', desc: 'Professional branding and composition for YouTube.', tools: ['Photoshop'] },
+        { img: 'https://i.ibb.co.com/pjfgQq7n/file-00000000419c7208b0cd5758b13a3854.png', title: 'Cinematic Thumbnail', desc: 'Bold and visually striking design for maximum engagement.', tools: ['Photoshop'] },
+        { img: 'https://i.ibb.co.com/39Cx60nk/file-000000000f1c72089e128bf62adb6314.png', title: 'Vlog & Lifestyle Thumbnail', desc: 'Bright, colorful composition that drives clicks.', tools: ['Photoshop'] },
+        { img: 'https://i.ibb.co.com/s9BVSsQt/1772959587314.png', title: 'Action-Packed Thumbnail', desc: 'Dynamic visuals combined with strong typography.', tools: ['Photoshop', 'Illustrator'] }
+      ],
+      poster:[
+        // fullImage: true disables cropping so the poster is displayed fully, without bottom text blocks.
+        { img: 'https://i.ibb.co.com/qM9kMqFv/1773014598576-1.png', fullImage: true },
+        { img: 'https://i.ibb.co.com/sd0PStnw/1773013004406.png', fullImage: true },
+        { img: 'https://i.ibb.co.com/4nD5SXvW/1772901659513.png', fullImage: true },
+        { img: 'https://i.ibb.co.com/rGMcnySf/1772863446928.png', fullImage: true },
+        { img: 'https://i.ibb.co.com/Z38rHCJ/1772863443028.png', fullImage: true }
+      ],
+      social:[
+        { img: 'https://i.ibb.co.com/LDFqXPvr/1773100511239.jpg', fullImage: true },
+        { img: 'https://i.ibb.co.com/pBnppybM/1773097088427.jpg', fullImage: true },
+        { img: 'https://i.ibb.co.com/wZhyfGpc/1773075445237.jpg', fullImage: true },
+        { img: 'https://i.ibb.co.com/nsbvpNNX/1773074242215.jpg', fullImage: true }
+      ]
+    };
+
+    const projectsGrid=document.getElementById('projects-grid');
+    const featuredItems =[
+      { cat: 'logo', badge: 'Logo', class: 'badge-logo', data: portfolioData.logo[0] },
+      { cat: 'thumb', badge: 'Thumbnail', class: 'badge-poster', data: portfolioData.thumb[0] },
+      { cat: 'poster', badge: 'Poster', class: 'badge-social', data: portfolioData.poster[0] }
+    ];
+
+    featuredItems.forEach((item,i)=>{
+      const card=document.createElement('div');
+      card.className='project-card';
+      card.style.transitionDelay=(i*0.1)+'s';
+      card.innerHTML=`
+        <div class="project-thumb">
+          <img src="${item.data.img}" alt="${item.data.title || 'Poster Design'}" loading="lazy">
+          <span class="project-type-badge ${item.class}">${item.badge}</span>
+          <div class="project-overlay">
+            <div class="view-circle"><i class="fas fa-eye"></i></div>
+            <button class="overlay-btn" onclick="openPortfolio('${item.cat}')">View Project</button>
+          </div>
+        </div>`;
+      projectsGrid.appendChild(card);
+    });
+
+    function buildPortfolioGrid(cat){
+      const grid = document.getElementById('portfolio-grid');
+      grid.innerHTML = '';
+      
+      let itemsToLoad =[];
+      if(cat === 'all') {
+         itemsToLoad =[
+           ...portfolioData.logo,
+           ...portfolioData.thumb,
+           ...portfolioData.poster,
+           ...portfolioData.social
+         ];
+      } else {
+         itemsToLoad = portfolioData[cat];
+      }
+
+      itemsToLoad.forEach((item,i)=>{
+        const card=document.createElement('div');
+        card.className='portfolio-card animate-in';
+        card.style.animationDelay=(i*0.08)+'s'; 
+        
+        let imgClass = item.fullImage ? "portfolio-image full-auto" : "portfolio-image";
+        let media=`<div class="${imgClass}"><img src="${item.img}" alt="${item.title || 'Portfolio Image'}" loading="lazy"></div>`;
+        
+        let info='';
+        // Conditionally render text box only if title, desc, or tools exist
+        if(item.title || item.desc || (item.tools && item.tools.length)) {
+          info+='<div class="portfolio-info">';
+          if(item.title) info+=`<h3 class="portfolio-title">${item.title}</h3>`;
+          if(item.desc) info+=`<p class="portfolio-desc">${item.desc}</p>`;
+          if(item.tools && item.tools.length) info+=`<div class="tools-label">Tools Used</div><div class="tools-list">${item.tools.map(t=>`<span class="tool-tag">${t}</span>`).join('')}</div>`;
+          info+='</div>';
+        }
+        
+        card.innerHTML=`${media}${info}`;
+        grid.appendChild(card);
+      });
+    }
+
+    function switchCategory(cat){
+      document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+      const activeBtn = document.getElementById(`${cat}-btn`);
+      if(activeBtn) activeBtn.classList.add('active');
+      
+      const grid = document.getElementById('portfolio-grid');
+      grid.innerHTML = '';
+      
+      void grid.offsetWidth; 
+      
+      buildPortfolioGrid(cat);
+    }
+
+    const transitionEl=document.getElementById('page-transition');
+    
+    function openPortfolio(cat='all'){
+      transitionEl.classList.add('active');
+      
+      setTimeout(()=>{
+        document.getElementById('main-page').style.display = 'none';
+        
+        const portfolioPage = document.getElementById('portfolio-page');
+        portfolioPage.classList.add('active');
+        
+        void portfolioPage.offsetWidth;
+
+        buildPortfolioGrid(cat);
+        
+        document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+        const activeBtn = document.getElementById(`${cat}-btn`);
+        if(activeBtn) activeBtn.classList.add('active');
+        
+        window.scrollTo(0,0);
+        
+        setTimeout(()=>transitionEl.classList.remove('active'),500);
+      },400);
+    }
+    
+    function closePortfolio(){
+      transitionEl.classList.add('active');
+      setTimeout(()=>{
+        document.getElementById('portfolio-page').classList.remove('active');
+        document.getElementById('main-page').style.display='block';
+        window.scrollTo(0,0);
+        setTimeout(()=>transitionEl.classList.remove('active'),500);
+      },400);
+    }
+
+    const obsOpt={threshold:0.1,rootMargin:'0px 0px -30px 0px'};
+    const revealObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('revealed'),parseInt(e.target.dataset.delay||0));revealObs.unobserve(e.target)}});
+    },obsOpt);
+    document.querySelectorAll('.value-card, .social-card, .project-card, .section-header').forEach(el=>revealObs.observe(el));
+
+    const circObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){
+        e.target.querySelectorAll('.circ-skill').forEach((s,i)=>{
+          setTimeout(()=>{s.classList.add('revealed');const f=s.querySelector('.circ-fill');const off=CIRC-(CIRC*(circularSkills[i]?.pct||0)/100);setTimeout(()=>f.style.strokeDashoffset=off,100)},i*150);
+        });circObs.unobserve(e.target)}});
+    },obsOpt);
+    circObs.observe(circContainer);
+
+    const sliderObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-item').forEach((item,i)=>{
+          setTimeout(()=>{item.classList.add('revealed');const bar=item.querySelector('.skill-bar');setTimeout(()=>bar.style.width=bar.dataset.pct+'%',100)},i*100);
+        });sliderObs.unobserve(e.target)}});
+    },obsOpt);
+    sliderObs.observe(sliderContainer);
+
+    (function(){const el=document.querySelector('.hero-title');if(!el)return;const texts=['<span>Creative</span> Graphic Designer','<span>Brand Identity</span> Specialist','<span>Visual</span> Storyteller'];let ti=0,ci=0,del=false;
+    function type(){const cur=texts[ti];del?ci--:ci++;el.innerHTML=cur.substring(0,Math.max(0,ci))+'<span class="cb">|</span>';let spd=del?40:80;if(!del&&ci>=cur.length){spd=2500;del=true}else if(del&&ci<=0){del=false;ti=(ti+1)%texts.length;spd=500}setTimeout(type,spd)}
+    const st=document.createElement('style');st.textContent='.cb{animation:bk 1s step-end infinite;color:var(--blue)}@keyframes bk{0%,100%{opacity:1}50%{opacity:0}}';document.head.appendChild(st);setTimeout(type,1500)})();
+  </script>
+</body>
+</html>
